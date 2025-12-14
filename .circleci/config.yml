@@ -1,19 +1,18 @@
 version: 2.1
-jobs: # a basic unit of work in a run
-build: # runs not using `Workflows` must have a `build` job as
-entry point
-macos: # indicate that we are using the macOS executor
-xcode: 12.4.0
-steps: # a series of commands to run
-- checkout # pull down code from your version control
-system.
-- run:
-# run our tests using xcode's cli tool `xcodebuild`
-name: Run Unit Tests
-command: xcodebuild test -workspace Nasa.xcworkspace -scheme
-Nasa -destination 'platform=iOS Simulator,name=iPhone
-12,OS=14.4'
-- run:
-# build our application
-name: Build Application
-command: xcodebuild -workspace Nasa.xcworkspace -scheme Nasa
+jobs:
+  build:
+    macos:
+      xcode: 12.4.0
+    steps:
+      - checkout
+      - run:
+          name: Run Unit Tests
+          command: xcodebuild test -workspace Nasa.xcworkspace -scheme Nasa -destination 'platform=iOS Simulator,name=iPhone 12,OS=14.4'
+      - run:
+          name: Build Application
+          command: xcodebuild -workspace Nasa.xcworkspace -scheme Nasa
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
